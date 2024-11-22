@@ -15,7 +15,7 @@ const validateCountryCode = (input: string): boolean => {
 
 const validateCurrency = (rawCurrencyPair) => {
   // console.log({ rawCurrencyPair });
-  // const currencyEnum = Object.values(Currency);
+  const currencyEnum = Object.values(Currency);
   // console.log({ currencyEnum });
   const splitCurrency = rawCurrencyPair.split(' ');
   // console.log({ splitCurrency });
@@ -41,7 +41,8 @@ const validateCurrency = (rawCurrencyPair) => {
 
 const validateRate = ({ transactionKey, transactionValue }) => {
   // console.log({ transactionKey, transactionValue });
-  if (!validateCountryCode(transactionKey)) {
+  const currencyTransactionEnum = Object.values(TransactionKey);
+  if (!currencyTransactionEnum.includes(transactionKey)) {
     throw new Error('Invalid transaction key!');
   }
 
@@ -136,7 +137,7 @@ export class exchangeRateService {
     }
     const data = await this.saveExchangeRates(refinedData);
     console.log({data})
-    return new ResponseObject('Successful!', '422', data);
+    return new ResponseObject('Successful!', 'FXQL-201', data);
   }
 
 
