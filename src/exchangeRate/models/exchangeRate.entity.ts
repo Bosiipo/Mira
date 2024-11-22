@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Currency } from './fxq.enum';
+import { Currency } from '../dto/exchangeRate.enum';
 
 @Entity('exchange_rates')
 export class ExchangeRate {
