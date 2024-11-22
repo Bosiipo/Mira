@@ -4,7 +4,8 @@ export enum Currency {
     JPY = 'JPY',
     EUR = 'EUR',
     NGN = 'NGN',
-    KES = 'KES'
+    KES = 'KES',
+    null = null
   }
 
   export enum TransactionKey {

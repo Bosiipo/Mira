@@ -4,7 +4,7 @@ import { Currency } from '../dto/exchangeRate.enum';
 @Entity('exchange_rates')
 export class ExchangeRate {
   @PrimaryGeneratedColumn()
-  EntryId: number;
+  EntryId?: number;
 
   @Column({
     type: 'enum',

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ExchangeRate } from '../models/exchangeRate.entity';
 import { Currency, TransactionKey } from '../dto/exchangeRate.enum';
-import { ResponseObject } from '../responses/exchangeRate.response';
+import { RateEntry, ResponseObject } from '../responses/exchangeRate.response';
 
 const validateCountryCode = (input: string): boolean => {
   // Regular expression to check for exactly three capital letters
@@ -78,15 +78,15 @@ export class exchangeRateService {
     if (statement.length === 0) {
       throw new Error('Enter a statement!');
     }
-    const splitInput = statement.split('\\');
-    const firstIteration = splitInput[0];
+    const splitInput: string[] = statement.split('\\');
+    const firstIteration: string = splitInput[0];
     if (firstIteration.split(' ').length !== 2) {
       throw new Error('Input not complete!');
     }
     let startingPointer: number = 0;
     let closingPointer: number = 0;
     let closingBlock: string = splitInput[closingPointer];
-    const refinedData = [];
+    const refinedData: ExchangeRate[] = [];
 
     while (startingPointer <= splitInput.length) {
       const current: string = splitInput[closingPointer];
@@ -97,15 +97,15 @@ export class exchangeRateService {
       if (!closingBlock.includes('}')) {
         throw new Error('Invalid syntax!');
       }
-      const prototype = {
-        SourceCurrency: 0,
-        DestinationCurrency: 0,
+      const prototype: ExchangeRate = {
+        SourceCurrency: Currency.null,
+        DestinationCurrency: Currency.null,
         BuyPrice: 0,
         SellPrice: 0,
-        CapAmount: 0
+        CapAmount: 0,
       }
       while (current.includes('{')) {
-        const currentIteration = splitInput[startingPointer];
+        const currentIteration: string = splitInput[startingPointer];
         if (currentIteration === 'n}') {
           break;
         }
@@ -115,9 +115,9 @@ export class exchangeRateService {
         prototype.DestinationCurrency = DestinationCurrency;
         startingPointer++;
         while (startingPointer < closingPointer) {
-          const rate = splitInput[startingPointer];
+          const rate: string = splitInput[startingPointer];
           const [, , transactionKey, transactionValue] = rate.trim().split(' ');
-          const refinedRate = validateRate({
+          const refinedRate: number = validateRate({
             transactionKey,
             transactionValue,
           });
@@ -135,8 +135,8 @@ export class exchangeRateService {
       closingPointer += 2;
       startingPointer++;
     }
-    const data = await this.saveExchangeRates(refinedData);
-    console.log({data})
+    const data: ExchangeRate[] = await this.saveExchangeRates(refinedData);
+    console.log({ data });
     return new ResponseObject('Successful!', 'FXQL-201', data);
   }
 
